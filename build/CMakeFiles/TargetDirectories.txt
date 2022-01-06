@@ -1,3 +1,0 @@
-/home/jxcv/Documents/hello_coroutines/build/CMakeFiles/main.dir
-/home/jxcv/Documents/hello_coroutines/build/CMakeFiles/edit_cache.dir
-/home/jxcv/Documents/hello_coroutines/build/CMakeFiles/rebuild_cache.dir
