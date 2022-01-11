@@ -34,9 +34,12 @@ namespace coro_sm {
                     return ((type == typeid(E)) || ...);
                 };
 
+                // awaitable
                 struct awaitable { // TODO - what does this do?
+
                     bool await_ready() const noexcept { return false; }
                     void await_suspend(handle) noexcept {}
+
                     std::variant<E...> await_resume() const {
                         std::variant<E...> event;
                         (void) ((
@@ -49,14 +52,13 @@ namespace coro_sm {
                 };
 
                 return awaitable { &current_event };
-            };
+            }
 
             void return_void() noexcept {}
             void unhandled_exception() noexcept {}
 
             std::any current_event;
-            // TODO - find out how this works
-            bool (*is_wanted_event)(const std::type_info&) = nullptr;
+            bool (*is_wanted_event)(const std::type_info&) /* = nullptr */ ;
         };
 
         ~state_machine() { coro.destroy(); }
@@ -78,17 +80,17 @@ namespace coro_sm {
         std::coroutine_handle<promise_type> coro;
     };
 
-    state_machine get_door() {
+    state_machine get_door(std::string ans) {
         for(;;) {
-        // closed
-        auto e = co_await event<open, knock>{};
-        if (std::holds_alternative<knock>(e)) {
-            std::cout << "Come in!\n";
-        } else if (std::holds_alternative<open>(e)) {
-            // open
-            co_await event<close>{};
+            // closed
+            auto e = co_await event<open, knock>{};
+            if (std::holds_alternative<knock>(e)) {
+                std::cout << ans << "\n";
+            } else if (std::holds_alternative<open>(e)) {
+                // open
+                co_await event<close>{};
+            }
         }
-    }
     };
 }
 
